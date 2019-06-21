@@ -11,12 +11,13 @@ workhours_opens = '10:00'
 workhours_closes = '22:00'
 
 promocodes =[
-    {"code":"doubletrouble","discount":10},
-    {"code": "delivery", "discount": 10},
-    {"code":"stepik", "discount":15},
+    {"code":"doubletrouble","discount":50},
+    {"code": "illbeback", "discount": 25},
+    {"code":"stepik", "discount":25},
     {"code":"pleaseplease","discount":5},
     {"code":"libertyordeath", "discount":100}
-    ]
+    {"code": "summer", "discount": 10}
+]
 
 promotions = [
     "Скидка 15% по промокоду STEPIK",
