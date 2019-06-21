@@ -20,8 +20,8 @@ promocodes =[
 
 promotions = [
     "Скидка 15% по промокоду STEPIK",
-    "Скидка 15% по промокоду DELIVERY",
-    "Скидка 5% на все напитки"
+    "Скидка 10% по промокоду SUMMER",
+    "Удваиваем все пиццы по промокоду udodopizza"
 ]
 
 meals = [{
@@ -54,9 +54,9 @@ def alive():
 def workours():
     return '{"opens": "'+workhours_opens+'", "closes":"'+workhours_closes+'"}'
 
-@app.route("/promotion")
+@app.route("/promo")
 def promotion():
-    return '{"promotion":"'+promotion_text+'"}'
+    return '{"promotion":"'+promotions[random.randint(0,2)]+'"}'
 
 @app.route("/promo/<code>")
 def promo(code):
