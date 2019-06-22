@@ -55,12 +55,18 @@ def alive():
     data = json.loads(config_content)
     config_file.close()
     if stepik_alive == True:
-        return json.dumps(data)
+        return json.dumps({"alive":data['alive']})
 
 
 @app.route("/workhours")
 def workours():
-    return json.dumps({"opens": workhours_opens, "closes": workhours_closes})
+    config_file = open('config.json', 'r')
+    config_content = config_file.read()
+    data = json.loads(config_content)
+    config_file.close()
+
+    return json.dumps(data["workhours"])
+        #json.dumps({"opens": workhours_opens, "closes": workhours_closes})
     # '{"opens": "'+workhours_opens+'", "closes":"'+workhours_closes+'"}'
 
 
