@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c26f7782-1002-4e5d-b577-32bf58cab2f6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/promotions.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/promo.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
     </list>
@@ -53,11 +53,20 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="192">
-              <caret line="70" column="70" selection-start-line="70" selection-start-column="70" selection-end-line="70" selection-end-column="70" />
+            <state relative-caret-position="-862">
+              <caret line="12" selection-start-line="12" selection-end-line="12" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/promo.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="119">
+              <caret line="7" column="1" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -114,6 +123,7 @@
         <option value="$PROJECT_DIR$/course.json" />
         <option value="$PROJECT_DIR$/config.json" />
         <option value="$PROJECT_DIR$/promotions.json" />
+        <option value="$PROJECT_DIR$/promo.json" />
         <option value="$PROJECT_DIR$/app.py" />
       </list>
     </option>
@@ -291,7 +301,14 @@
       <option name="project" value="LOCAL" />
       <updated>1561242288673</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="route promotion added">
+      <created>1561243379588</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1561243379588</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TodoView">
@@ -380,7 +397,8 @@
     <MESSAGE value="new promotions added, promotions randomized" />
     <MESSAGE value="alive configured" />
     <MESSAGE value="alive + workhours configured" />
-    <option name="LAST_COMMIT_MESSAGE" value="alive + workhours configured" />
+    <MESSAGE value="route promotion added" />
+    <option name="LAST_COMMIT_MESSAGE" value="route promotion added" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/cgi-bin/run.py" />
@@ -434,10 +452,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/promo.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="1" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="70" column="70" selection-start-line="70" selection-start-column="70" selection-end-line="70" selection-end-column="70" />
+        <state relative-caret-position="-862">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>

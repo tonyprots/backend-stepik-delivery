@@ -12,13 +12,6 @@ workhours_opens = '10:00'
 workhours_closes = '22:00'
 
 
-
-promotions = [
-    "Скидка 15% по промокоду STEPIK",
-    "Скидка 10% по промокоду SUMMER",
-    "Удваиваем все пиццы по промокоду udodopizza"
-]
-
 meals = [{
     "title": "Chicken",
     "id": 1,
@@ -74,6 +67,8 @@ def promotion():
 
 @app.route("/promo/<code>")
 def promo(code):
+    promos_file=open("promo.json","r",encoding = "utf-8")
+    promocodes = json.loads(promos_file.read())
     for promocode in promocodes:
         if promocode["code"] == code:
             return json.dumps({"valid": True, "discount": promocode['discount']}, ensure_ascii=False)
