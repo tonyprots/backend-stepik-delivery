@@ -4,13 +4,13 @@ import json
 
 app = Flask(__name__)
 
+USER_ID = "1"
 promotion_text = "Скидка скидка 15%"
 
 stepik_alive = True
 
 workhours_opens = '10:00'
 workhours_closes = '22:00'
-
 
 meals = [{
     "title": "Chicken",
@@ -36,30 +36,30 @@ def hello():
 
 @app.route("/alive")
 def alive():
-    config_file = open('config.json', 'r', encoding = "utf-8")
+    config_file = open('config.json', 'r', encoding="utf-8")
     config_content = config_file.read()
     data = json.loads(config_content)
     config_file.close()
     if stepik_alive == True:
-        return json.dumps({"alive":data['alive']})
+        return json.dumps({"alive": data['alive']})
 
 
 @app.route("/workhours")
 def workours():
-    config_file = open('config.json', 'r', encoding = "utf-8")
+    config_file = open('config.json', 'r', encoding="utf-8")
     config_content = config_file.read()
     data = json.loads(config_content)
     config_file.close()
 
     return json.dumps(data["workhours"])
-        #json.dumps({"opens": workhours_opens, "closes": workhours_closes})
+    # json.dumps({"opens": workhours_opens, "closes": workhours_closes})
     # '{"opens": "'+workhours_opens+'", "closes":"'+workhours_closes+'"}'
 
 
 @app.route("/promotion")
 def promotion():
     promotion_number = random.randint(0, 2)
-    promotion_file = open("promotions.json","r", encoding = "utf-8")
+    promotion_file = open("promotions.json", "r", encoding="utf-8")
     promotions = json.loads(promotion_file.read())
     return json.dumps(promotions[promotion_number], ensure_ascii=False)
     # '{"promotion":"'+promotions[random.randint(0,2)]+'"}'
@@ -67,10 +67,20 @@ def promotion():
 
 @app.route("/promo/<code>")
 def promo(code):
-    promos_file=open("promo.json","r",encoding = "utf-8")
+    promos_file = open("promo.json", "r", encoding="utf-8")
     promocodes = json.loads(promos_file.read())
     for promocode in promocodes:
         if promocode["code"] == code:
+            users_file_r = open('users.json', 'r', encoding="utf-8")
+            users_data = json.loads(users_file_r.read())
+            users_file_r.close()
+
+            users_data[USER_ID]['promocode'] = code
+
+            users_file_w = open("users.json", "w", encoding="utf-8")
+            users_file_w.write(json.dumps(users_data))
+            users_file_w.close()
+
             return json.dumps({"valid": True, "discount": promocode['discount']}, ensure_ascii=False)
     return json.dumps({"valid": False})
 
