@@ -1,0 +1,16 @@
+[{
+    "title": "Chicken",
+    "id": 1,
+    "available": true,
+    "picture": null,
+    "price": 20.0,
+    "category": 1
+}, {
+    "title": "Milk",
+    "id": 2,
+    "available": true,
+    "picture": null,
+    "price": 10.0,
+    "category": 1
+}
+]

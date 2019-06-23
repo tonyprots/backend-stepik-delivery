@@ -12,22 +12,6 @@ stepik_alive = True
 workhours_opens = '10:00'
 workhours_closes = '22:00'
 
-meals = [{
-    "title": "Chicken",
-    "id": 1,
-    "available": True,
-    "picture": '',
-    "price": 20.0,
-    "category": 1
-}, {
-    "title": "Milk",
-    "id": 2,
-    "available": True,
-    "picture": '',
-    "price": 10.0,
-    "category": 1
-}]
-
 
 @app.route("/")
 def hello():
@@ -87,6 +71,10 @@ def promo(code):
 
 @app.route("/meals")
 def meals_route():
+    meal_file = open("meal.json", "r")
+    meals = json.loads(meal_file.read())
+    meal_file.close()
+
     users_file_r = open('users.json', 'r', encoding="utf-8")
     users_data = json.loads(users_file_r.read())
     users_file_r.close()
