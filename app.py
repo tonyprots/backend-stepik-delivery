@@ -87,6 +87,21 @@ def promo(code):
 
 @app.route("/meals")
 def meals_route():
+    users_file_r = open('users.json', 'r', encoding="utf-8")
+    users_data = json.loads(users_file_r.read())
+    users_file_r.close()
+
+    discount=0
+    promocode = users_data[USER_ID]["promocode"]
+    if  promocode != None:
+        promos_file = open("promo.json", "r", encoding="utf-8")
+        promocodes = json.loads(promos_file.read())
+        promos_file.close()
+        for p in promocodes:
+            if p["code"] == promocode:
+                discount = p["discount"]
+        for meal in meals:
+            meal["price"]= (1-discount/100)*meal["price"]
     return json.dumps(meals)
 
 
