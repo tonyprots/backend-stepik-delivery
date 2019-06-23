@@ -5,92 +5,71 @@ import json
 app = Flask(__name__)
 
 USER_ID = "1"
-promotion_text = "Скидка скидка 15%"
-
 stepik_alive = True
 
-workhours_opens = '10:00'
-workhours_closes = '22:00'
 
+def file_read(file):
+    read_file = open(file, 'r', encoding="utf-8")
+    file_content = read_file.read()
+    data = json.loads(file_content)
+    read_file.close()
+    return data
+
+def file_write(file, data):
+    write_file = open(file, "w", encoding="utf-8")
+    write_file.write(json.dumps(data))
+    write_file.close()
 
 @app.route("/")
 def hello():
-    return "<h1>" + "Test" + "</h1"
+    return "<h1>" + "Server is ON" + "</h1"
 
 
 @app.route("/alive")
 def alive():
-    config_file = open('config.json', 'r', encoding="utf-8")
-    config_content = config_file.read()
-    data = json.loads(config_content)
-    config_file.close()
-    if stepik_alive == True:
+    data = file_read('config.json')
+    if stepik_alive:
         return json.dumps({"alive": data['alive']})
 
 
 @app.route("/workhours")
 def workours():
-    config_file = open('config.json', 'r', encoding="utf-8")
-    config_content = config_file.read()
-    data = json.loads(config_content)
-    config_file.close()
-
+    data = file_read('config.json')
     return json.dumps(data["workhours"])
-    # json.dumps({"opens": workhours_opens, "closes": workhours_closes})
-    # '{"opens": "'+workhours_opens+'", "closes":"'+workhours_closes+'"}'
 
 
 @app.route("/promotion")
 def promotion():
     promotion_number = random.randint(0, 2)
-    promotion_file = open("promotions.json", "r", encoding="utf-8")
-    promotions = json.loads(promotion_file.read())
+    promotions = file_read('promotions.json')
     return json.dumps(promotions[promotion_number], ensure_ascii=False)
-    # '{"promotion":"'+promotions[random.randint(0,2)]+'"}'
 
 
 @app.route("/promo/<code>")
 def promo(code):
-    promos_file = open("promo.json", "r", encoding="utf-8")
-    promocodes = json.loads(promos_file.read())
+    promocodes = file_read('promo.json')
     for promocode in promocodes:
         if promocode["code"] == code:
-            users_file_r = open('users.json', 'r', encoding="utf-8")
-            users_data = json.loads(users_file_r.read())
-            users_file_r.close()
-
+            users_data = file_read('users.json')
             users_data[USER_ID]['promocode'] = code
-
-            users_file_w = open("users.json", "w", encoding="utf-8")
-            users_file_w.write(json.dumps(users_data))
-            users_file_w.close()
-
+            file_write("users.json", users_data)
             return json.dumps({"valid": True, "discount": promocode['discount']}, ensure_ascii=False)
     return json.dumps({"valid": False})
 
 
 @app.route("/meals")
 def meals_route():
-    meal_file = open("meal.json", "r")
-    meals = json.loads(meal_file.read())
-    meal_file.close()
-
-    users_file_r = open('users.json', 'r', encoding="utf-8")
-    users_data = json.loads(users_file_r.read())
-    users_file_r.close()
-
-    discount=0
+    meals = file_read('meal.json')
+    users_data = file_read('users.json')
+    discount = 0
     promocode = users_data[USER_ID]["promocode"]
-    if  promocode != None:
-        promos_file = open("promo.json", "r", encoding="utf-8")
-        promocodes = json.loads(promos_file.read())
-        promos_file.close()
+    if promocode != None:
+        promocodes = file_read('promo.json')
         for p in promocodes:
             if p["code"] == promocode:
                 discount = p["discount"]
         for meal in meals:
-            meal["price"]= (1-discount/100)*meal["price"]
+            meal["price"] = (1 - discount / 100) * meal["price"]
     return json.dumps(meals)
-
 
 app.run("0.0.0.0", 8000)
