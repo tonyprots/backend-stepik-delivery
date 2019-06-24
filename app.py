@@ -1,8 +1,12 @@
 from flask import Flask
+from flask_cors import CORS
+from flask import request
 import random
 import json
+import uuid
 
 app = Flask(__name__)
+CORS(app)
 
 USER_ID = "1"
 stepik_alive = True
@@ -15,10 +19,12 @@ def file_read(file):
     read_file.close()
     return data
 
+
 def file_write(file, data):
     write_file = open(file, "w", encoding="utf-8")
     write_file.write(json.dumps(data))
     write_file.close()
+
 
 @app.route("/")
 def hello():
@@ -71,5 +77,45 @@ def meals_route():
         for meal in meals:
             meal["price"] = (1 - discount / 100) * meal["price"]
     return json.dumps(meals)
+
+
+@app.route("/orders", methods=["GET", "POST"])
+def orders():
+    if request.method == "GET":
+        pass
+    elif request.method == "POST":
+        discount = 0
+        raw_data = request.data.decode("utf-8")
+        data = json.loads(raw_data)
+        meals = file_read('meal.json')
+        users_data = file_read('users.json')
+        promocode = users_data[USER_ID]['promocode']
+        if promocode != None:
+            promocodes = file_read('promo.json')
+            for p in promocodes:
+                if p["code"] == promocode:
+                    discount = p["discount"]
+        sum = 0
+        meals_copy = json.loads(json.dumps(meals))
+        for meal in meals_copy:
+            meal_id = meal['id']
+            for user_meal_id in data['meals']:
+                if user_meal_id == meal_id:
+                    sum += (1 - discount / 100) * meal["price"]
+                    break
+        new_order_id = str(uuid.uuid4())
+        new_order = {
+            "id": new_order_id,
+            "meals": data["meals"],
+            "sum": sum,
+            "status": "accepted",
+            "user_id": USER_ID
+        }
+        order_data = file_read('orders.json')
+        order_data[new_order_id] = new_order
+        file_write('orders.json', order_data)
+
+        return json.dumps({"order_id": new_order_id, "status": new_order['status']})
+
 
 app.run("0.0.0.0", 8000)
