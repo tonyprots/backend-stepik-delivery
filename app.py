@@ -4,6 +4,7 @@ from flask import request
 import random
 import json
 import uuid
+import datetime
 
 app = Flask(__name__)
 CORS(app)
@@ -106,6 +107,7 @@ def orders():
         new_order_id = str(uuid.uuid4())
         new_order = {
             "id": new_order_id,
+            "submit_time": datetime.datetime.now().strftime("%d-%m-%Y %H:%M"),
             "meals": data["meals"],
             "sum": sum,
             "status": "accepted",
@@ -117,5 +119,23 @@ def orders():
 
         return json.dumps({"order_id": new_order_id, "status": new_order['status']})
 
+@app.route("/activeorder")
+def activeorders():
+    order = file_read("orders.json")
+    time_zero = "25-10-2019 00:27"
+    key_id = "0"
+    for key in order:
+        print(order[key]["submit_time"])
+
+        if (order[key]["submit_time"])<time_zero:
+            time_zero=(order[key]["submit_time"])
+            key_id = key
+    return json.dumps({
+            'id': order[key_id]["id"],
+            'ordered': order[key_id]["submit_time"],
+            'meals': order[key_id]["meals"],
+            'summ': order[key_id]["sum"],
+            'status': order[key_id]["status"]
+        })
 
 app.run("0.0.0.0", 8000)
