@@ -125,8 +125,6 @@ def activeorders():
     time_zero = "25-10-2019 00:27"
     key_id = "0"
     for key in order:
-        print(order[key]["submit_time"])
-
         if (order[key]["submit_time"])<time_zero:
             time_zero=(order[key]["submit_time"])
             key_id = key
@@ -138,4 +136,10 @@ def activeorders():
             'status': order[key_id]["status"]
         })
 
+@app.route("/delete/order/<id>")
+def delete(id):
+    order = file_read('orders.json')
+    order[id]['status']="REJECTED"
+    file_write('orders.json',order)
+    return json.dumps({"status": True})
 app.run("0.0.0.0", 8000)

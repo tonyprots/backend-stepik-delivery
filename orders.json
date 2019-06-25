@@ -1,2 +1,1 @@
-{"882fdc6a-08dd-490a-b11e-859fc0afd22d":
-{"id": "882fdc6a-08dd-490a-b11e-859fc0afd22d", "submit_time": "25-06-2019 00:27", "meals": [1], "sum": 20.0, "status": "accepted", "user_id": "1"}}
+{"882fdc6a-08dd-490a-b11e-859fc0afd22d": {"id": "882fdc6a-08dd-490a-b11e-859fc0afd22d", "submit_time": "25-06-2019 00:27", "meals": [1], "sum": 20.0, "status": "REJECTED", "user_id": "1"}}
