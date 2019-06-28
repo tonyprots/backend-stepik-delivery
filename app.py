@@ -5,6 +5,8 @@ import random
 import json
 import uuid
 import datetime
+import sqlite3
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -26,6 +28,61 @@ def file_write(file, data):
     write_file.write(json.dumps(data))
     write_file.close()
 
+def get_cursor():
+    connection = sqlite3.connect("database.db")
+    c = connection.cursor()
+    return c
+
+
+def init_db():
+    c = get_cursor()
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS meals (
+        id integer PRIMARY KEY,
+        title text,
+        available integer,
+        picture text,
+        price real,
+        category integer
+    )
+    """)
+
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS promocodes (
+        id integer PRIMARY KEY,
+        code text,
+        discount real
+    )
+    """)
+
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+        id integer PRIMARY KEY,
+        promocode text
+    )
+    """)
+
+    c.execute("""
+    INSERT INTO meals VALUES (1, "Chicken", 1, "", 20.0, 1)
+    """)
+
+    c.execute("""
+    INSERT INTO meals VALUES (2, "Milk", 1, "", 10.0, 1)
+    """)
+
+    c.execute("""
+    INSERT INTO promocodes VALUES(1, "stepik", 30.0)
+    """)
+    c.execute("""
+    INSERT INTO promocodes VALUES(2, "delivery", 10.0)
+    """)
+
+    c.execute("""
+    INSERT INTO users VALUES(1, null)
+    """)
+
+    c.connection.commit()
+    c.connection.close()
 
 @app.route("/")
 def hello():
@@ -51,7 +108,7 @@ def promotion():
     promotions = file_read('promotions.json')
     return json.dumps(promotions[promotion_number], ensure_ascii=False)
 
-
+"""
 @app.route("/promo/<code>")
 def promo(code):
     promocodes = file_read('promo.json')
@@ -62,8 +119,28 @@ def promo(code):
             file_write("users.json", users_data)
             return json.dumps({"valid": True, "discount": promocode['discount']}, ensure_ascii=False)
     return json.dumps({"valid": False})
+"""
 
+@app.route("/promo/<code>")
+def promo(code):
+    c = get_cursor()
+    c.execute("""
+    SELECT * FROM promocodes WHERE code = ?
+    """, [code])
+    result = c.fetchone()
+    if result is None:
+        return json.dumps({"valid": False})
 
+    promo_id, promo_code, promo_discount = result
+    c.execute("""
+    UPDATE users
+    SET promocode = ?
+    WHERE id = ?
+    """, (promo_code, int(USER_ID)))
+    c.connection.commit()
+    c.connection.close()
+    return json.dumps({"valid": True, "discount": promo_discount})
+"""
 @app.route("/meals")
 def meals_route():
     meals = file_read('meal.json')
@@ -80,10 +157,47 @@ def meals_route():
     return json.dumps(meals)
 
 
+[ 
+{"address": "Nagatinskaya, 7a", "status": "CANCELLED", "meals": [1, 2], "id": "becc6c68-835c-4e84-b1ef-f92962a1d7c1", "summ": 288.0, "ordered": 1559574456.457047}, 
+{"address": "Nagatinskaya, 7a", "status": "CANCELLED", "meals": [1, 2], "id": "dc4ba93a-1b65-4e78-8d48-928e7b473524", "summ": 201.6, "ordered": 1559574496.381071}]
+"""
+
+@app.route("/meals")
+def meals_route():
+        c = get_cursor()
+        c.execute("""
+        SELECT discount
+        FROM promocodes
+        WHERE code = (
+            SELECT promocode
+            FROM users
+            WHERE id = ?
+        ) 
+        """, (int(USER_ID),))
+        discount = 0
+        result = c.fetchone()
+        if result is not None:
+            discount = result[0]
+        meals=[]
+        for meals_info in c.execute("SELECT * FROM meals"):
+            meals_id, title, available, picture, price, category = meals_info
+            meals.append({
+                "id":meals_id,
+                "title": title,
+                "available": bool(available),
+                "picture": picture,
+                "price": price * (1.0-discount/100),
+                "category": category
+            })
+        return json.dumps(meals)
+
+
+
 @app.route("/orders", methods=["GET", "POST"])
 def orders():
     if request.method == "GET":
-        pass
+        orders = file_read("orders.json")
+        return json.dumps(orders)
     elif request.method == "POST":
         discount = 0
         raw_data = request.data.decode("utf-8")
@@ -136,10 +250,14 @@ def activeorders():
             'status': order[key_id]["status"]
         })
 
-@app.route("/delete/order/<id>")
+@app.route("/order/<id>", methods = ["DELETE"])
 def delete(id):
     order = file_read('orders.json')
-    order[id]['status']="REJECTED"
+    order[id]['status']="CANCELLED"
     file_write('orders.json',order)
     return json.dumps({"status": True})
+
+if not os.path.exists("database.db"):
+    init_db()
+
 app.run("0.0.0.0", 8000)
