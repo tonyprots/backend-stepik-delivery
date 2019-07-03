@@ -8,6 +8,10 @@ import datetime
 import sqlite3
 import os
 
+
+from twilio.rest import Client
+
+
 app = Flask(__name__)
 CORS(app)
 
@@ -27,6 +31,7 @@ def file_write(file, data):
     write_file = open(file, "w", encoding="utf-8")
     write_file.write(json.dumps(data))
     write_file.close()
+
 
 def get_cursor():
     connection = sqlite3.connect("database.db")
@@ -63,6 +68,14 @@ def init_db():
     """)
 
     c.execute("""
+    CREATE TABLE IF NOT EXISTS orders (
+        id integer PRIMARY KEY,
+        ordered text,
+        meals
+    )
+    """)
+
+    c.execute("""
     INSERT INTO meals VALUES (1, "Chicken", 1, "", 20.0, 1)
     """)
 
@@ -84,6 +97,7 @@ def init_db():
     c.connection.commit()
     c.connection.close()
 
+
 @app.route("/")
 def hello():
     return "<h1>" + "Server is ON" + "</h1"
@@ -100,26 +114,6 @@ def alive():
 def workours():
     data = file_read('config.json')
     return json.dumps(data["workhours"])
-
-
-@app.route("/promotion")
-def promotion():
-    promotion_number = random.randint(0, 2)
-    promotions = file_read('promotions.json')
-    return json.dumps(promotions[promotion_number], ensure_ascii=False)
-
-"""
-@app.route("/promo/<code>")
-def promo(code):
-    promocodes = file_read('promo.json')
-    for promocode in promocodes:
-        if promocode["code"] == code:
-            users_data = file_read('users.json')
-            users_data[USER_ID]['promocode'] = code
-            file_write("users.json", users_data)
-            return json.dumps({"valid": True, "discount": promocode['discount']}, ensure_ascii=False)
-    return json.dumps({"valid": False})
-"""
 
 @app.route("/promo/<code>")
 def promo(code):
@@ -140,32 +134,12 @@ def promo(code):
     c.connection.commit()
     c.connection.close()
     return json.dumps({"valid": True, "discount": promo_discount})
-"""
-@app.route("/meals")
-def meals_route():
-    meals = file_read('meal.json')
-    users_data = file_read('users.json')
-    discount = 0
-    promocode = users_data[USER_ID]["promocode"]
-    if promocode != None:
-        promocodes = file_read('promo.json')
-        for p in promocodes:
-            if p["code"] == promocode:
-                discount = p["discount"]
-        for meal in meals:
-            meal["price"] = (1 - discount / 100) * meal["price"]
-    return json.dumps(meals)
 
-
-[ 
-{"address": "Nagatinskaya, 7a", "status": "CANCELLED", "meals": [1, 2], "id": "becc6c68-835c-4e84-b1ef-f92962a1d7c1", "summ": 288.0, "ordered": 1559574456.457047}, 
-{"address": "Nagatinskaya, 7a", "status": "CANCELLED", "meals": [1, 2], "id": "dc4ba93a-1b65-4e78-8d48-928e7b473524", "summ": 201.6, "ordered": 1559574496.381071}]
-"""
 
 @app.route("/meals")
 def meals_route():
-        c = get_cursor()
-        c.execute("""
+    c = get_cursor()
+    c.execute("""
         SELECT discount
         FROM promocodes
         WHERE code = (
@@ -174,23 +148,22 @@ def meals_route():
             WHERE id = ?
         ) 
         """, (int(USER_ID),))
-        discount = 0
-        result = c.fetchone()
-        if result is not None:
-            discount = result[0]
-        meals=[]
-        for meals_info in c.execute("SELECT * FROM meals"):
-            meals_id, title, available, picture, price, category = meals_info
-            meals.append({
-                "id":meals_id,
-                "title": title,
-                "available": bool(available),
-                "picture": picture,
-                "price": price * (1.0-discount/100),
-                "category": category
-            })
-        return json.dumps(meals)
-
+    discount = 0
+    result = c.fetchone()
+    if result is not None:
+        discount = result[0]
+    meals = []
+    for meals_info in c.execute("SELECT * FROM meals"):
+        meals_id, title, available, picture, price, category = meals_info
+        meals.append({
+            "id": meals_id,
+            "title": title,
+            "available": bool(available),
+            "picture": picture,
+            "price": price * (1.0 - discount / 100),
+            "category": category
+        })
+    return json.dumps(meals)
 
 
 @app.route("/orders", methods=["GET", "POST"])
@@ -233,29 +206,50 @@ def orders():
 
         return json.dumps({"order_id": new_order_id, "status": new_order['status']})
 
+
 @app.route("/activeorder")
 def activeorders():
     order = file_read("orders.json")
     time_zero = "25-10-2019 00:27"
     key_id = "0"
     for key in order:
-        if (order[key]["submit_time"])<time_zero:
-            time_zero=(order[key]["submit_time"])
+        if (order[key]["submit_time"]) < time_zero:
+            time_zero = (order[key]["submit_time"])
             key_id = key
     return json.dumps({
-            'id': order[key_id]["id"],
-            'ordered': order[key_id]["submit_time"],
-            'meals': order[key_id]["meals"],
-            'summ': order[key_id]["sum"],
-            'status': order[key_id]["status"]
-        })
+        'id': order[key_id]["id"],
+        'ordered': order[key_id]["submit_time"],
+        'meals': order[key_id]["meals"],
+        'summ': order[key_id]["sum"],
+        'status': order[key_id]["status"]
+    })
 
-@app.route("/order/<id>", methods = ["DELETE"])
+
+@app.route("/order/<id>", methods=["DELETE"])
 def delete(id):
     order = file_read('orders.json')
-    order[id]['status']="CANCELLED"
-    file_write('orders.json',order)
+    order[id]['status'] = "CANCELLED"
+    file_write('orders.json', order)
     return json.dumps({"status": True})
+
+@app.route("/notification")
+
+# Сюда бы внести номер юзера и инфу о заказе. Было бы круто перенести в создание заказа.
+def notif():
+    sms_client = Client(
+        "ACb7585a47107a1adb0829f7cd5c040eb0",
+        "deaff95b749290eb0b3307eec79ddd8b"
+    )
+    message = sms_client.messages.create(
+        body = "New order is accepted!",
+        from_= "+19255264119",
+        to = "+79119782904"
+    )
+
+    return json.dumps({"status":True})
+
+
+
 
 if not os.path.exists("database.db"):
     init_db()
