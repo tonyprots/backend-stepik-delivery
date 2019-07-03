@@ -7,7 +7,8 @@ import uuid
 import datetime
 import sqlite3
 import os
-
+import urllib
+import requests
 
 from twilio.rest import Client
 
@@ -38,12 +39,36 @@ def get_cursor():
     c = connection.cursor()
     return c
 
+def fill_database():
+    api_key = "3ac8a2f6a0112783867a41e3858e1c26"
+    key_words = "cake"
+    c = get_cursor()
+
+    for page in range(1,4):
+        params = {"key": api_key, "q":key_words, "page": page}
+        url_string = "https://www.food2fork.com/api/search?" + urllib.parse.urlencode(params)
+        r = requests.get(url_string)
+        data = r.json()
+        for item in data["recipes"]:
+            c.execute("""
+            INSERT INTO meals (title, available, picture, price, category) VALUES (?,?,?,?,?)
+            """,[
+                item["title"],
+                1,
+                item["image_url"],
+                item["social_rank"] + random.randint(0,100),
+                1
+            ])
+            c.connection.commit()
+    c.connection.close()
+
+
 
 def init_db():
     c = get_cursor()
     c.execute("""
     CREATE TABLE IF NOT EXISTS meals (
-        id integer PRIMARY KEY,
+        id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
         title text,
         available integer,
         picture text,
@@ -253,5 +278,6 @@ def notif():
 
 if not os.path.exists("database.db"):
     init_db()
+    fill_database()
 
 app.run("0.0.0.0", 8000)
