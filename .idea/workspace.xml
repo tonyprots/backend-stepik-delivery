@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/app.py" line="32" />
+    <bookmark url="file://$PROJECT_DIR$/app.py" line="33" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c26f7782-1002-4e5d-b577-32bf58cab2f6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/depriciated/depriciated_code.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql-test.py" beforeDir="false" afterPath="$PROJECT_DIR$/depriciated/sql-test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,8 +19,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="236" column="88" selection-start-line="236" selection-start-column="88" selection-end-line="236" selection-end-column="88" />
+            <state relative-caret-position="300">
+              <caret line="282" column="23" selection-start-line="282" selection-start-column="23" selection-end-line="282" selection-end-column="23" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -31,10 +29,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/depriciated/depriciated_code.py">
+        <entry file="file://$PROJECT_DIR$/frontend/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="544">
-              <caret line="32" selection-start-line="32" selection-end-line="32" />
+            <state relative-caret-position="-32">
+              <caret line="4" column="10" selection-start-line="4" selection-start-column="10" selection-end-line="4" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -106,6 +104,7 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>metho</find>
+      <find>request</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -131,6 +130,7 @@
         <option value="$PROJECT_DIR$/sql-test.py" />
         <option value="$PROJECT_DIR$/depriciated_code.py" />
         <option value="$PROJECT_DIR$/depriciated/depriciated_code.py" />
+        <option value="$PROJECT_DIR$/frontend/index.html" />
         <option value="$PROJECT_DIR$/app.py" />
       </list>
     </option>
@@ -161,6 +161,11 @@
               <item name="backend-stepik-delivery" type="462c0819:PsiDirectoryNode" />
               <item name="depriciated" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="backend-stepik-delivery" type="b2602c69:ProjectViewProjectNode" />
+              <item name="backend-stepik-delivery" type="462c0819:PsiDirectoryNode" />
+              <item name="frontend" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -176,6 +181,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\tony-\PycharmProjects\backend-stepik-delivery\frontend" />
       <recent name="C:\Users\tony-\PycharmProjects\backend-stepik-delivery\depriciated" />
     </key>
   </component>
@@ -401,7 +407,21 @@
       <option name="project" value="LOCAL" />
       <updated>1561739772446</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="SQL tested, twilio enabled">
+      <created>1562185346713</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1562185346713</updated>
+    </task>
+    <task id="LOCAL-00017" summary="parsing from food2fork enabled">
+      <created>1562194284790</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1562194284819</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TodoView">
@@ -514,7 +534,9 @@
     <MESSAGE value="active orders route" />
     <MESSAGE value="added delete order func" />
     <MESSAGE value="sql implemented: first part (meals, promocodes)" />
-    <option name="LAST_COMMIT_MESSAGE" value="sql implemented: first part (meals, promocodes)" />
+    <MESSAGE value="SQL tested, twilio enabled" />
+    <MESSAGE value="parsing from food2fork enabled" />
+    <option name="LAST_COMMIT_MESSAGE" value="parsing from food2fork enabled" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/cgi-bin/run.py" />
@@ -537,16 +559,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="14" column="13" lean-forward="true" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="236" column="88" selection-start-line="236" selection-start-column="88" selection-end-line="236" selection-end-column="88" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -596,6 +608,40 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
           <caret line="2" selection-start-line="2" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/frontend/js/chunk-vendors.c6370ae0.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/frontend/js/app.5baab9e8.js.map">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="23" selection-start-column="23" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/frontend/js/app.5baab9e8.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="40" selection-start-line="1" selection-start-column="40" selection-end-line="1" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/frontend/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-32">
+          <caret line="4" column="10" selection-start-line="4" selection-start-column="10" selection-end-line="4" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="282" column="23" selection-start-line="282" selection-start-column="23" selection-end-line="282" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
