@@ -131,8 +131,7 @@ def hello():
 @app.route("/alive")
 def alive():
     data = file_read('config.json')
-    if stepik_alive:
-        return json.dumps({"alive": data['alive']})
+    return json.dumps({"alive": data['alive']})
 
 
 @app.route("/workhours")
@@ -209,8 +208,7 @@ def orders():
                 if p["code"] == promocode:
                     discount = p["discount"]
         sum = 0
-        meals_copy = json.loads(json.dumps(meals))
-        for meal in meals_copy:
+        for meal in meals:
             meal_id = meal['id']
             for user_meal_id in data['meals']:
                 if user_meal_id == meal_id:
